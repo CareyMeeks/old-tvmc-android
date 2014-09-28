@@ -314,10 +314,10 @@ is 'tools/android/packaging' and that the proper sdk/ndk paths are set.
   # adb -e install -r images/xbmcapp-debug.apk
 
 -Launch XBMC on the emulator without the GUI
-  # adb shell am start -a android.intent.action.MAIN -n org.xbmc.xbmc/android.app.NativeActivity
+  # adb shell am start -a android.intent.action.MAIN -n ag.tvaddons.xbmc/android.app.NativeActivity
 
 -Kill a misbehaving XBMC
-  # adb shell ps | grep org.xbmc | awk '{print $2}' | xargs adb shell kill
+  # adb shell ps | grep ag.tvaddons | awk '{print $2}' | xargs adb shell kill
 
 -Filter logcat messages by a specific tag (e.g. "XBMC")
   # adb logcat -s XBMC:V
