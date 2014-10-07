@@ -1,0 +1,17 @@
+<settings>
+    <skinsettings>
+        <setting type="string" name="skin.confluence.HomeVideosButton1">plugin.video.1channel</setting>
+        <setting type="string" name="skin.confluence.HomeVideosButton2">plugin.video.projectfreetv</setting>
+        <setting type="string" name="skin.confluence.HomeVideosButton3">plugin.video.icefilms</setting>
+        <setting type="string" name="skin.confluence.HomeVideosButton4">plugin.video.moviedb</setting>
+        <setting type="string" name="skin.confluence.HomeVideosButton5">plugin.video.SportsDevil</setting>
+        <setting type="string" name="skin.confluence.HomeMusicButton1">plugin.audio.radio_de</setting>
+        <setting type="string" name="skin.confluence.HomeMusicButton2">plugin.video.itunes_podcasts</setting>
+        <setting type="string" name="skin.confluence.HomeMusicButton3">plugin.audio.radioreference</setting>
+        <setting type="string" name="skin.confluence.HomeMusicButton4">plugin.audio.soundcloud</setting>
+        <setting type="string" name="skin.confluence.HomeProgramButton1">script.navi-x</setting>
+        <setting type="string" name="skin.confluence.HomeProgramButton2">plugin.program.addoninstaller</setting>
+        <setting type="string" name="skin.confluence.HomeProgramButton3">plugin.video.xbmchubmaintenance</setting>
+    </skinsettings>
+</settings>
+
