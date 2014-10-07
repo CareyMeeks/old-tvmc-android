@@ -18,6 +18,7 @@
     </lookandfeel>
     <services>
         <devicename>BHMC</devicename>
+    </services>
     <skinsettings>
         <setting type="bool" name="skin.confluence.UseCustomBackground">true</setting>
         <setting type="bool" name="skin.confluence.HideBackGroundFanart">true</setting>
