@@ -60,7 +60,7 @@
             android:name=".Main"
             android:configChanges="orientation|keyboard|keyboardHidden|navigation"
             android:finishOnTaskLaunch="true"
-            android:label="XBMC - TVA"
+            android:label="TVMC"
             android:launchMode="singleInstance"
             android:screenOrientation="sensorLandscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
