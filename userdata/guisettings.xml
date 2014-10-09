@@ -3,7 +3,7 @@
         <setting type="string" name="skin.confluence.HomeVideosButton1">plugin.video.1channel</setting>
         <setting type="string" name="skin.confluence.HomeVideosButton2">plugin.video.projectfreetv</setting>
         <setting type="string" name="skin.confluence.HomeVideosButton3">plugin.video.icefilms</setting>
-        <setting type="string" name="skin.confluence.HomeVideosButton4">plugin.video.moviedb</setting>
+        <setting type="string" name="skin.confluence.HomeVideosButton4">plugin.video.genesis</setting>
         <setting type="string" name="skin.confluence.HomeVideosButton5">plugin.video.SportsDevil</setting>
         <setting type="string" name="skin.confluence.HomeMusicButton1">plugin.audio.radio_de</setting>
         <setting type="string" name="skin.confluence.HomeMusicButton2">plugin.video.itunes_podcasts</setting>
