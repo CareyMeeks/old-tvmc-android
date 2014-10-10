@@ -1,4 +1,4 @@
-package org.xbmc.xbmc;
+package ag.tvaddons.xbmc;
 
 import android.app.NativeActivity;
 import android.content.Intent;

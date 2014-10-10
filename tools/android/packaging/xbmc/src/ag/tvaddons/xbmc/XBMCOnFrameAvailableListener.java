@@ -1,4 +1,4 @@
-package org.xbmc.xbmc;
+package ag.tvaddons.xbmc;
 
 import android.graphics.SurfaceTexture;
 import android.graphics.SurfaceTexture.OnFrameAvailableListener;

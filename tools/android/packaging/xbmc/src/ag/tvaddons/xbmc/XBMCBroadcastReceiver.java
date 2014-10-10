@@ -1,4 +1,4 @@
-package org.xbmc.xbmc;
+package ag.tvaddons.xbmc;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
