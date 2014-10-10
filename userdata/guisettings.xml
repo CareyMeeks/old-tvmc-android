@@ -1,5 +1,37 @@
 <settings>
+    <audiooutput>
+        <guisoundmode>0</guisoundmode>
+    </audiooutput>
+    <general>
+        <addonautoupdate default="true">true</addonautoupdate>
+        <addonforeignfilter default="true">false</addonforeignfilter>
+        <addonnotifications default="true">true</addonnotifications>
+        <settinglevel>1</settinglevel>
+    </general>
+    <lookandfeel>
+        <enablerssfeeds default="true">true</enablerssfeeds>
+        <font default="true">Default</font>
+        <rssedit default="true"></rssedit>
+        <skin default="true">skin.confluence</skin>
+        <skincolors default="true">SKINDEFAULT</skincolors>
+        <skintheme default="true">SKINDEFAULT</skintheme>
+        <skinzoom default="true">0</skinzoom>
+        <soundskin default="true">SKINDEFAULT</soundskin>
+        <startupwindow default="true">10000</startupwindow>
+    </lookandfeel>
+    <services>
+        <devicename>TVMC</devicename>
+    </services>
     <skinsettings>
+        <setting type="bool" name="skin.confluence.UseCustomBackground">true</setting>
+        <setting type="bool" name="skin.confluence.HideBackGroundFanart">true</setting>
+        <setting type="bool" name="skin.confluence.ShowBackgroundVideo">true</setting>
+        <setting type="bool" name="skin.confluence.ShowBackgroundVis">true</setting>
+        <setting type="bool" name="skin.confluence.HomepageHideRecentlyAddedVideo">false</setting>
+        <setting type="bool" name="skin.confluence.HomepageHideRecentlyAddedAlbums">false</setting>
+        <setting type="bool" name="skin.confluence.AutoScroll">true</setting>
+        <setting type="bool" name="skin.confluence.HideVisualizationFanart">true</setting>
+        <setting type="string" name="skin.confluence.CustomBackgroundPath">special://xbmc/media/skindefault.jpg</setting>
         <setting type="string" name="skin.confluence.HomeVideosButton1">plugin.video.1channel</setting>
         <setting type="string" name="skin.confluence.HomeVideosButton2">plugin.video.projectfreetv</setting>
         <setting type="string" name="skin.confluence.HomeVideosButton3">plugin.video.icefilms</setting>
