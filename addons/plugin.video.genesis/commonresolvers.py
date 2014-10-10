@@ -35,7 +35,7 @@ except: pass
 
 class getUrl(object):
     def __init__(self, url, close=True, proxy=None, post=None, mobile=False, referer=None, cookie=None, output='', timeout='10'):
-        if not proxy is None:
+        if not proxy == None:
             proxy_handler = urllib2.ProxyHandler({'http':'%s' % (proxy)})
             opener = urllib2.build_opener(proxy_handler, urllib2.HTTPHandler)
             opener = urllib2.install_opener(opener)
@@ -44,7 +44,7 @@ class getUrl(object):
             cookie_handler = urllib2.HTTPCookieProcessor(cookielib.LWPCookieJar())
             opener = urllib2.build_opener(cookie_handler, urllib2.HTTPBasicAuthHandler(), urllib2.HTTPHandler())
             opener = urllib2.install_opener(opener)
-        if not post is None:
+        if not post == None:
             request = urllib2.Request(url, post)
         else:
             request = urllib2.Request(url,None)
@@ -52,9 +52,9 @@ class getUrl(object):
             request.add_header('User-Agent', 'Mozilla/5.0 (iPhone; CPU; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7')
         else:
             request.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')
-        if not referer is None:
+        if not referer == None:
             request.add_header('Referer', referer)
-        if not cookie is None:
+        if not cookie == None:
             request.add_header('cookie', cookie)
         response = urllib2.urlopen(request, timeout=int(timeout))
         if output == 'cookie':
@@ -75,6 +75,9 @@ class resolvers:
 
             if '/vk.com' in url:                url = self.vk(url)
             elif 'mail.ru' in url:              url = self.mailru(url)
+            elif 'movreel.com' in url:          url = self.movreel(url)
+            elif 'streamin.to' in url:          url = self.streamin(url)
+            elif 'grifthost.com' in url:        url = self.grifthost(url)
             elif 'videomega.tv' in url:         url = self.videomega(url)
             elif 'docs.google.com' in url:      url = self.googledocs(url)
             elif 'picasaweb.google.com' in url: url = self.picasaweb(url)
@@ -82,7 +85,6 @@ class resolvers:
             elif 'ishared.eu' in url:           url = self.ishared(url)
             elif 'firedrive.com' in url:        url = self.firedrive(url)
             elif 'putlocker.com' in url:        url = self.firedrive(url)
-            elif 'movreel.com' in url:          url = self.movreel(url)
             elif 'billionuploads.com' in url:   url = self.billionuploads(url)
             elif '180upload.com' in url:        url = self._180upload(url)
             elif 'hugefiles.net' in url:        url = self.hugefiles(url)
@@ -151,6 +153,75 @@ class resolvers:
             url = re.compile('videoSrc = "(.+?)"').findall(result)[0]
             url = getUrl(url, output='geturl').result
             return url
+        except:
+            return
+
+    def movreel(self, url):
+        try:
+            user = xbmcaddon.Addon().getSetting("movreel_user")
+            password = xbmcaddon.Addon().getSetting("movreel_password")
+
+            login = 'http://movreel.com/login.html'
+            post = {'op': 'login', 'login': user, 'password': password, 'redirect': url}
+            post = urllib.urlencode(post)
+            result = getUrl(url, close=False).result
+            result += getUrl(login, post=post, close=False).result
+            result = common.parseDOM(result, "Form", attrs = { "name": "F1" })[-1]
+
+            op = common.parseDOM(result, "input", ret="value", attrs = { "name": "op" })[0]
+            id = common.parseDOM(result, "input", ret="value", attrs = { "name": "id" })[0]
+            rd = common.parseDOM(result, "input", ret="value", attrs = { "name": "rand" })[0]
+
+            post = {'op': op, 'id': id, 'rand': rd, 'referer': url, 'method_free': '', 'method_premium': ''}
+            post = urllib.urlencode(post)
+
+            result = getUrl(url, post=post).result
+
+            url = re.compile('(<a .+?</a>)').findall(result)
+            url = [i for i in url if 'Download Link' in i][-1]
+            url = common.parseDOM(url, "a", ret="href")[0]
+            return url
+        except:
+            return
+
+    def streamin(self, url):
+        try:
+            url = url.replace('streamin.to/', 'streamin.to/embed-')
+            if not url.endswith('.html'): url = url + '.html'
+            result = getUrl(url, mobile=True).result
+            url = re.compile("file:'(.+?)'").findall(result)[0]
+            return url
+        except:
+            return
+
+    def grifthost(self, url):
+        try:
+            url = url.replace('/embed-', '/').split('-')[0]
+
+            result = getUrl(url, close=False).result
+            result = common.parseDOM(result, "Form", attrs = { "name": "F1" })[0]
+
+            op = common.parseDOM(result, "input", ret="value", attrs = { "name": "op" })[0]
+            id = common.parseDOM(result, "input", ret="value", attrs = { "name": "id" })[0]
+            rd = common.parseDOM(result, "input", ret="value", attrs = { "name": "rand" })[0]
+
+            post = {'op': op, 'id': id, 'rand': rd, 'referer': url, 'method_free': '', 'method_premium': ''}
+            post = urllib.urlencode(post)
+
+            import time
+            request = urllib2.Request(url, post)
+
+            for i in range(0, 4):
+                try:
+                    response = urllib2.urlopen(request, timeout=5)
+                    result = response.read()
+                    response.close()
+                    url = re.compile('(<a .+?</a>)').findall(result)
+                    url = [i for i in url if '/download.png' in i][-1]
+                    url = common.parseDOM(url, "a", ret="href")[0]
+                    return url
+                except:
+                    time.sleep(1)
         except:
             return
 
@@ -253,23 +324,6 @@ class resolvers:
         except:
             return
 
-    def movreel(self, url):
-        try:
-            html = getUrl(url).result
-
-            op = re.search('<input type="hidden" name="op" value="(.+?)">', html).group(1)
-            id = re.search('<input type="hidden" name="id" value="(.+?)">', html).group(1)
-            rand = re.search('<input type="hidden" name="rand" value="(.+?)">', html).group(1)
-
-            post = {'op': op, 'id': id, 'referer': url, 'rand': rand, 'method_premium': ''}
-            post = urllib.urlencode(post)
-
-            html = getUrl(url, post=post).result
-            url = re.search('<a href="(.+)">Download Link</a>', html).group(1)
-            return url
-        except:
-            return
-
     def _180upload(self, url):
         try:
             html = getUrl(url).result
@@ -323,20 +377,16 @@ class resolvers:
                 solution = captcha().numeric(numeric)
                 data.update({'code':solution})
 
-            data = urllib.urlencode(data)
+            html = getUrl(url, post=urllib.urlencode(data)).result
 
-            u = getUrl(url, output='geturl', post=data).result
-            if not url == u: return u
+            data = {}
+            r = re.findall(r'type="hidden" name="(.+?)" value="(.+?)">', html)
+            for name, value in r: data[name] = value
+            data['method_free'] = 'Free Download'
+            request = urllib2.Request(url, urllib.urlencode(data))
+            response = urllib2.urlopen(request)
+            url = response.geturl()
 
-            html = getUrl(url, post=data).result
-
-            sPattern = '''<div id="player_code">.*?<script type='text/javascript'>(eval.+?)</script>'''
-            r = re.findall(sPattern, html, re.DOTALL|re.I)[0]
-            sUnpacked = jsunpack().unpack(r).replace('\\', '')
-
-            url = None
-            try: url = re.findall('file,(.+?)\)\;s1',sUnpacked)[0]
-            except: url = re.findall('name="src"[0-9]*="(.+?)"/><embed',sUnpacked)[0]
             return url
         except:
             return

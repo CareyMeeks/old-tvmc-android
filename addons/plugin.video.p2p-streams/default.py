@@ -19,12 +19,16 @@ from resources.core.advancedfunctions import *
 from resources.core.livestreams import *
 from resources.core.parsers import parsers
 from resources.core.resolver import go_to_id
+from resources.core.acecore import stop_aceengine
+from resources.core.history import *
                                                                                                                                                                                                                                                                   
 def main_menu():
       addDir(translate(40114),MainURL,400,addonpath + art + 'web-parsers-menu.png',2,True)
       addDir(translate(40115),MainURL,100,addonpath + art + 'xml_lists.png',2,True)
       addDir(translate(40144),MainURL,200,addonpath + art + 'Favorites-menu.png',2,True)
-      addLink('','','p2p')
+      if settings.getSetting('addon_history') == "true":
+      	addDir(translate(70036),MainURL,8,addonpath + art + 'history.png',2,True)
+      if "confluence" in xbmc.getSkinDir(): addLink('','','p2p')
       if xbmc.getCondVisibility('system.platform.windows') or xbmc.getCondVisibility('system.platform.linux') or xbmc.getCondVisibility('System.Platform.OSX') or xbmc.getCondVisibility('System.Platform.Android'):
           addDir('[COLOR orange]AceStream: [/COLOR]' + translate(40004),MainURL,4,addonpath + art + 'acestream-menu-item.png',1,False)
           addDir('[COLOR orange]AceStream: [/COLOR]' + translate(600029),MainURL,6,addonpath + art + 'acestream-menu-item.png',1,False)
@@ -33,7 +37,7 @@ def main_menu():
           addDir('[COLOR orange]SopCast: [/COLOR]' + translate(40006),MainURL,5,addonpath + art + 'sopcast-menu-item.png',1,False)
       if xbmc.getCondVisibility('System.Platform.IOS') or xbmc.getCondVisibility('System.Platform.ATV2'):
           addLink(translate(40056),'',addonpath + art + 'processwarning.png')
-      addLink('','','p2p')
+      if "confluence" in xbmc.getSkinDir(): addLink('','','p2p')
       addDir('[B]' + translate(40057) + '[/B]',MainURL,300,addonpath + art + 'settings_menu.png',2,True)       
       xbmc.executebuiltin("Container.SetViewMode(50)")
       #break_sopcast is a function used in windows to intentionally break the sopcast.exe setup by renaming one of its codec files. It's ran here to rename the file again in case it failed when played before
@@ -93,20 +97,26 @@ print("Parser: "+str(parser))
 print("Parserfunction: "+str(parserfunction))
 
 #from 1-99 functions related to the addon menu functions 
-if mode==None or url==None or len(url)<1:
+if mode==None:
       print("Installed version: v" + versao)
       if settings.getSetting('autoconfig') == "true": first_conf()
       else:
           if settings.getSetting('last_version_check') != versao:
               try:check_for_updates()
               except: pass
-      main_menu()
+      if settings.getSetting('enter_channel_list') == "false":
+      	main_menu()
+      else:
+      	parsers.addon_parsers_menu()
 elif mode==1: ace.acestreams(name,iconimage,url)
 elif mode==2: sop.sopstreams(name,iconimage,url)
 elif mode==3: go_to_id('sop_id')
 elif mode==4: go_to_id('ace')
 elif mode==5: go_to_id('sop_url')
 elif mode==6: ace.load_local_torrent()
+elif mode==7: stop_aceengine()
+elif mode==8: list_history()
+elif mode==9: remove_history()
 #from 100-199 functions related to xml lists
 elif mode==100: xml_lists_menu()
 elif mode==101: list_type(url)
@@ -122,6 +132,7 @@ elif mode==109: get_groups(url)
 elif mode==200: addon_favourites()
 elif mode==201: add_to_addon_favourites(name,url,iconimage)
 elif mode==202: remove_addon_favourites(url)
+elif mode==203: manual_add_to_favourites()
 #from 300-399 Advanced functions
 elif mode==300: advanced_menu()
 elif mode==301: import_advancedxml()
@@ -132,6 +143,8 @@ elif mode==305: set_engine_setting(url)
 elif mode==306: remove_lock()
 elif mode==307: clear_cache(url)
 elif mode==308: set_linux_engine_setting(url)
+elif mode==309: set_acestream_engine_cache_folder(url)
+elif mode==310: shutdown_hooks()
 #from 400-499 Site parsers
 elif mode==400: parsers.addon_parsers_menu()
 elif mode==401:

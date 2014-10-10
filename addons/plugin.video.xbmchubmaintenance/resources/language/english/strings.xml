@@ -14,6 +14,13 @@
     <!-- Settings -->
     <string id="31000">Email address</string>
     <string id="31001">Always skip xbmc.old.log (log from previous run)</string>
+	
+    <!-- Parental Control -->
+    <string id="20001">Enable Parental Control</string>
+    <string id="20002">Set watershed time</string>
+    <string id="20003">Set minimum watershed rating</string>
+    <string id="20004">Set PIN</string>
+    <string id="20005">Set action if no rating is available or "Unrated"</string>
 
     <!-- Usage help strings in settings dialog -->
     <string id="32000">This Addon uploads your logs to xbmclogs.com</string>

@@ -7,10 +7,9 @@ item_info_from=@PARAM1@
 item_info_build=http://www.macacaiindrum.ucoz.es/channel/%s.htm
 
 item_info_name=tmp
-item_info_from=@PARAM1@
-item_info_convert=replace('%s','ch','')
-#item_info_convert=getInfo('%s','.*?<script src="/([^"]+).swf"></script><script.*','@REFERER@')
-item_info_convert=getInfo('http://www.macacaiindrum.ucoz.es/z%shistats.swf','.*?src="([^"]+).*?"file=([^&]+).*?streamer=([^&]+).*','@REFERER@','swf|file|rtmp)
+item_info_from=pageUrl
+item_info_convert=getInfo('%s','.*?<script src="/([^"]+).swf"></script><script.*','@REFERER@')
+item_info_convert=getInfo('http://www.macacaiindrum.ucoz.es/%s.swf','.*?src="([^"]+).*?"file=([^&]+).*?streamer=([^&]+).*','@REFERER@','swf|file|rtmp)
 item_info_build=%s
 
 item_info_name=url

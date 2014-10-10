@@ -46,6 +46,13 @@
     <string id="400004">Synchroniseer parsers nu</string>
     <string id="400005">Zet parser auto-synchronisatie aan</string>
     <string id="400006">Synchroniseer interval voor parsers</string>
+    <string id="70009">Force use DVD Player for ace and sop playback</string>
+    <string id="70010">Alternative CMD</string>
+    <string id="70036">-Addon History</string>
+    <string id="70037">Enable addon history</string>
+    <string id="70038">Items to save</string>
+    <string id="70039">Clean addon history</string>
+    <string id="70040">Enter to parser list on boot</string>
     
     <!-- Default.py -->
     <string id="40115">-Addon xml lijst</string>
@@ -165,6 +172,14 @@
     	<string id="50023">Vergeet niet dat de AcestreamEngine app</string>
     	<string id="50024">aan moet staan voordat je begint</string>
     	<string id="50025">met een Acestream!</string>
+  	<string id="70014">Downloading AcestreamEngine bundle for Android</string>
+  	<string id="70015">By default p2p-streams will use its included Acestream Engine</string>
+  	<string id="70016">Do you want to download and use the app instead?</string>
+  	<string id="70017">Do you want to download Ace Player?</string>
+  	<string id="70018">This will enable you to use the external player option.</string>
+  	<string id="70019">Downloading Ace Player</string>
+  	<string id="70020">Aceplayer.apk downladed to folder:</string>
+  	<string id="70021">Do you want to use the external player as default?</string>
     	
     	<!-- advancedfunctions.py -->
     	<string id="40068">Verwijder ts.lock file </string>
@@ -192,6 +207,22 @@
  	<string id="600026">Instelling is gewijzigd</string>
  	<string id="600025">Ongeldige waarde. Alleen gehele getallen toegestaan!</string>
  	<string id="40069">ts.lock verwijderen gelukt</string>
+ 	<string id="70011">Do you want to change your Acestream cache folder?</string>
+  	<string id="70012">Choose new Acestream cache folder</string>
+  	<string id="70013">Cachefolder location</string>
+  	<string id="70025">P2P-Streams force stop hook:</string>
+  	<string id="70026">Apply costum stop function</string>
+  	<string id="70027">Do you want to replace the current skin stop button by our costumized stop function?</string>
+	<string id="70028">Current skin: </string>
+	<string id="70029">This will only apply to the current skin</string>
+	<string id="70030">If it gets updated you might need to repeat this procedure</string>
+	<string id="70031">If you uninstall this addon you need to revert those changes otherwise you will break the xbmc default stop function!</string>
+	<string id="70032">Are you sure you want to continue?</string>
+	<string id="70033">Do you want to map a button on your remote to the stop function?</string>
+	
+	<!-- utils/keymapeditor.py -->
+	<string id="70034">Press the key you want to assign now</string>
+	<string id="70035">Timeout in %.0f seconds...</string>
     
      <!-- livestreams.py -->
      <string id="40116">[B][COLOR orange]Sopcast.org lijst[/COLOR][/B] (http://sopcast.org/chlist.xml)</string>
@@ -210,6 +241,9 @@
 	<string id="40145">Je hebt geen favorieten!</string>
 	<string id="40148">Sucessvol toegevoegd aan favorieten</string>
 	<string id="40147">Sucessvol verwijderd uit favorieten</string>
+	<string id="70022">Manually add a favourite</string>
+	<string id="70023">Insert ace or sop url</string>
+	<string id="70024">Insert a name for your channel</string>
 
 	<!-- directoryhandle.py -->
 	<string id="40143">Toevoegen aan addon favorieten</string>

@@ -62,6 +62,7 @@ class _TSPlayer(xbmc.Player):
         self.vod=True
         self.duration=None
         self.coms=[]
+        if settings.getSetting('force_dvplayer') == 'true': xbmc.Player(xbmc.PLAYER_CORE_DVDPLAYER)
     def onPlayBackPaused( self ):
         self.log.out('paused')
         
@@ -236,7 +237,16 @@ class TSengine():
         import subprocess
         if xbmc.getCondVisibility('System.Platform.Android') or settings.getSetting('force_android') == "true":
             try:
-                xbmc.executebuiltin('XBMC.StartAndroidActivity("org.acestream.engine")')
+                if settings.getSetting('engine_app') == "1": xbmc.executebuiltin('XBMC.StartAndroidActivity("org.acestream.engine")')
+                else:
+                    command = ["sh","/data/data/"+settings.getSetting('app_id')+"/files/plugin.video.p2p-streams/org.acestream.engine/files/droidace.sh",settings.getSetting('app_id')]
+                    if settings.getSetting('total_max_download_rate') != "0":
+                        command.append('--download-limit')
+                        command.append(settings.getSetting('total_max_download_rate'))
+                    if settings.getSetting('total_max_upload_rate') != "0":
+                        command.append('--upload-limit')
+                        command.append(settings.getSetting('total_max_upload_rate'))
+                    self.proc = subprocess.Popen(command)
             except:
                 self.sm("Not installed")
                 self.log.out("Not installed")
@@ -517,7 +527,7 @@ class TSengine():
         return "Ok"
 
     def end(self):
-        if settings.getSetting("kill_type") == "1" or xbmc.getCondVisibility('System.Platform.Android') or xbmc.getCondVisibility('system.platform.windows'):
+        if settings.getSetting("kill_type") == "1" or xbmc.getCondVisibility('system.platform.windows'):
             self.active=False
             comm='SHUTDOWN'
             if self.conn:self.TSpush(comm)
@@ -539,7 +549,7 @@ class TSengine():
                 if settings.getSetting('shutdown-engine') == "true":
                     subprocess.Popen('taskkill /F /IM ace_engine.exe /T',shell=True)
                 else: pass
-            elif xbmc.getCondVisibility('system.platform.linux'):
+            elif xbmc.getCondVisibility('system.platform.linux') and not xbmc.getCondVisibility('System.Platform.Android'):
                 if settings.getSetting('shutdown-engine') == "true":
                     try:
                         self.proc.kill()
@@ -553,16 +563,45 @@ class TSengine():
                         self.proc.kill()
                         self.proc.wait()
                     except: pass
+            elif xbmc.getCondVisibility('System.Platform.Android') and settings.getSetting("engine_app") == "0":
+                if settings.getSetting('shutdown-engine') == "true":
+                    try:
+                        self.proc.kill()
+                        self.proc.wait()
+                    except: pass
+                    try:
+                        xbmc_user = os.getlogin()
+                        procshut_ace = subprocess.Popen(['ps','|','grep','python'],shell=False,stdout=subprocess.PIPE)
+                        for line in procshut_ace.stdout:
+                            match = re.findall(r'\S+', line.rstrip())
+                            if match:
+                                if 'acestream' in match[-1] and len(match)>2:
+                                    if xbmc_user == match[0]:
+                                        os.system("kill " + match[1])
+                                    else:
+                                        os.system("su -c kill " + match[1])
+                    except: pass
+            
 
-        if settings.getSetting("kill_type") == "0" and not xbmc.getCondVisibility('System.Platform.Android') and not xbmc.getCondVisibility('system.platform.windows'):
-            if xbmc.getCondVisibility('system.platform.linux'):
+        if settings.getSetting("kill_type") == "0":
+            if xbmc.getCondVisibility('system.platform.windows'):
+                subprocess.Popen('taskkill /F /IM ace_engine.exe /T',shell=True)
+                #if settings.getSetting('save') != "true":
+                #    try:
+                #        cache_file = self.lnk.split('/')[-2]
+                #        acestream_cachefolder_file = os.path.join(os.getenv("SystemDrive"),'\_acestream_cache_',cache_file)
+                #        xbmcvfs.delete(acestream_cachefolder_file)
+                #    except: pass              
+   
+            if xbmc.getCondVisibility('system.platform.linux') and not xbmc.getCondVisibility('System.Platform.Android'):
                 os.system("kill $(ps aux | grep '[a]cestream' | awk '{print $1}')")
                 os.system("kill $(ps aux | grep '[a]cestream' | awk '{print $2}')")
                 os.system("kill $(ps aux | grep '[s]tart.py' | awk '{print $2}')")
                 if settings.getSetting('save') != "true":
                     try:
                         cache_file = self.lnk.split('/')[-2]
-                        acestream_cachefolder_file = os.path.join(os.getenv("HOME"),'.ACEStream','cache',cache_file)
+                        if settings.getSetting('acestream_cachefolder') == '': acestream_cachefolder_file = os.path.join(os.getenv("HOME"),'.ACEStream','cache',cache_file)
+                        else: acestream_cachefolder_file = os.path.join(settings.getSetting('acestream_cachefolder'),cache_file)
                         xbmcvfs.delete(acestream_cachefolder_file)
                     except: pass
                           
@@ -572,6 +611,24 @@ class TSengine():
                     try:
                         cache_file = self.lnk.split('/')[-2]
                         acestream_cachefolder_file = os.path.join(os.getenv("HOME"),'.ACEStream','cache',cache_file)
+                        xbmcvfs.delete(acestream_cachefolder_file)
+                    except: pass
+                    
+            elif xbmc.getCondVisibility('System.Platform.Android'):
+                try:
+                    procshut_ace = subprocess.Popen(['ps','|','grep','python'],shell=False,stdout=subprocess.PIPE)
+                    for line in procshut_ace.stdout:
+                        match = re.findall(r'\S+', line.rstrip())
+                        if match:
+                            if 'acestream' in match[-1] and len(match)>2:
+                                os.system("kill " + match[1])
+                                xbmc.sleep(200)
+                except: pass
+                if settings.getSetting('save') != "true":
+                    try:
+                        cache_file = self.lnk.split('/')[-2]
+                        if settings.getSetting('acestream_cachefolder') == '': acestream_cachefolder_file = os.path.join('/sdcard','.ACEStream','cache',cache_file)
+                        else: acestream_cachefolder_file = os.path.join(settings.getSetting('acestream_cachefolder'),cache_file)
                         xbmcvfs.delete(acestream_cachefolder_file)
                     except: pass
 
@@ -769,110 +826,164 @@ class TSServ(threading.Thread):
             if settings.getSetting('ace-debug') == "true":
                 print('Received command: ' + str(engine_data) )
 
-
     def end(self):
         self.active = False
         self.daemon = False
         self.log.out('Daemon Fully Dead')
-
-
+        
+        
+def stop_aceengine():
+    if xbmc.getCondVisibility('Player.HasMedia'):
+        if re.findall('http://(\d+).(\d+).(\d+).(\d+):(\d+)/content/(.+?)/(\d+)\.(\d+)',xbmc.Player().getPlayingFile()):
+            if xbmc.getCondVisibility('system.platform.windows'):
+                subprocess.Popen('taskkill /F /IM ace_engine.exe /T',shell=True)
+                #Need to finish this...
+                #if settings.getSetting('save') != "true": 
+                #    try:
+                #        cache_file = self.lnk.split('/')[-2]
+                #        acestream_cachefolder_file = os.path.join(os.getenv("SystemDrive"),'\_acestream_cache_',cache_file)
+                #        xbmcvfs.delete(acestream_cachefolder_file)
+                #    except: pass
+ 
+            if xbmc.getCondVisibility('system.platform.linux') and not xbmc.getCondVisibility('System.Platform.Android'):
+                os.system("kill $(ps aux | grep '[a]cestream' | awk '{print $1}')")
+                os.system("kill $(ps aux | grep '[a]cestream' | awk '{print $2}')")
+                os.system("kill $(ps aux | grep '[s]tart.py' | awk '{print $2}')")
+                if settings.getSetting('save') != "true":
+                    try:
+                        cache_file = self.lnk.split('/')[-2]
+                        if settings.getSetting('acestream_cachefolder') == '': acestream_cachefolder_file = os.path.join(os.getenv("HOME"),'.ACEStream','cache',cache_file)
+                        else: acestream_cachefolder_file = os.path.join(settings.getSetting('acestream_cachefolder'),cache_file)
+                        xbmcvfs.delete(acestream_cachefolder_file)
+                    except: pass
+                          
+            elif xbmc.getCondVisibility('system.platform.OSX'):
+                os.system("kill $(ps aux | grep '[s]tart.py')")
+                if settings.getSetting('save') != "true":
+                    try:
+                        cache_file = self.lnk.split('/')[-2]
+                        acestream_cachefolder_file = os.path.join(os.getenv("HOME"),'.ACEStream','cache',cache_file)
+                        xbmcvfs.delete(acestream_cachefolder_file)
+                    except: pass
+                    
+            elif xbmc.getCondVisibility('System.Platform.Android'):
+                try:
+                    procshut_ace = subprocess.Popen(['ps','|','grep','python'],shell=False,stdout=subprocess.PIPE)
+                    for line in procshut_ace.stdout:
+                        match = re.findall(r'\S+', line.rstrip())
+                        if match:
+                            if 'acestream' in match[-1] and len(match)>2:
+                                os.system("kill " + match[1])
+                                xbmc.sleep(200)
+                except: pass
+                if settings.getSetting('save') != "true":
+                    try:
+                        cache_file = self.lnk.split('/')[-2]
+                        if settings.getSetting('acestream_cachefolder') == '': acestream_cachefolder_file = os.path.join('/sdcard','.ACEStream','cache',cache_file)
+                        else: acestream_cachefolder_file = os.path.join(settings.getSetting('acestream_cachefolder'),cache_file)
+                        xbmcvfs.delete(acestream_cachefolder_file)
+                    except: pass
+        xbmc.executebuiltin('PlayerControl(Stop)')       
+        
+        
+        
 
 class OverlayText(object):
-        def __init__(self):
-                self.showing = False
-                self.window = xbmcgui.Window(12005)
-                origin_x = 920
-                origin_y = 90
-                #main window
-                self._background = xbmcgui.ControlImage(origin_x, origin_y, 340, 280, os.path.join(addonpath,"resources","art","lateral-fundo.png"))
-                self._acestreamlogo = xbmcgui.ControlImage(origin_x + 30, origin_y + 20, 40, 35, os.path.join(addonpath,"resources","art","acestreamlogo.png"))
-                self._supseparator = xbmcgui.ControlImage(origin_x, origin_y + 65, 330, 1, os.path.join(addonpath,"resources","art","lateral-separador.png"))
-                self._botseparator = xbmcgui.ControlImage(origin_x, origin_y + 260, 330, 1, os.path.join(addonpath,"resources","art","lateral-separador.png"))
-                self._title = xbmcgui.ControlLabel(origin_x+100, origin_y + 25, 200, 20, str(translate(50000)), font='font13', textColor='0xFFEB9E17')
-                self._total_stats_label = xbmcgui.ControlLabel(origin_x+125, origin_y + 175, 200, 20, str(translate(50005)), font='font10', textColor='0xFFEB9E17')
-                #labels
-                self._action = xbmcgui.ControlLabel(origin_x+20, origin_y + 80, 200, 20, str(translate(50001)), font='font10')
-                self._download = xbmcgui.ControlLabel(origin_x+20, origin_y + 105, 200, 20, str(translate(50002)), font='font10')
-                self._upload = xbmcgui.ControlLabel(origin_x+20, origin_y + 130, 200, 20, str(translate(50003)), font='font10')
-                self._seeds = xbmcgui.ControlLabel(origin_x+20, origin_y + 155, 200, 20, str(translate(50004)), font='font10')
-                self._total_download = xbmcgui.ControlLabel(origin_x+20, origin_y + 205, 200, 20, str(translate(50006)), font='font10')
-                self._total_upload = xbmcgui.ControlLabel(origin_x+20, origin_y + 230, 200, 20, str(translate(50007)), font='font10')
-                #values
-                self._action_value = xbmcgui.ControlLabel(origin_x+80, origin_y + 80, 200, 20,'N/A', font='font10')
-                self._percent_value = xbmcgui.ControlLabel(origin_x+280, origin_y + 80, 200, 20,'N/A', font='font10')
-                self._download_value = xbmcgui.ControlLabel(origin_x+105, origin_y + 105, 200, 20,'N/A', font='font10')
-                self._upload_value = xbmcgui.ControlLabel(origin_x+85, origin_y + 130, 200, 20,'N/A', font='font10')
-                self._seeds_value = xbmcgui.ControlLabel(origin_x+75, origin_y + 155, 200, 20,'N/A', font='font10')
-                self._total_download_value = xbmcgui.ControlLabel(origin_x+120, origin_y + 205, 200, 20,'N/A', font='font10')
-                self._total_upload_value = xbmcgui.ControlLabel(origin_x+100, origin_y + 230, 200, 20,'N/A', font='font10')
+    def __init__(self):
+        self.showing = False
+        self.window = xbmcgui.Window(12005)
+        viewport_w, viewport_h = self._get_skin_resolution()
+        font_max = 'font13'
+        font_min = 'font10'
+        origin_x = int(float(viewport_w)/1.3913)
+        origin_y = int(float(viewport_h)/8.0)
+        window_w = int(float(viewport_w)/3.7647)
+        window_h = int(float(viewport_h)/2.5714)
+        acelogo_w = int(float(window_w)/8.5)
+        acelogo_h = int(float(window_w)/11.0)
+        text_lat = int(float(window_w)/15)
+        text_w = int(float(window_w)/1.7)
+        text_h = int(float(window_h)/14)
+        fst_setting = int(float(window_h)/3.5)
+        fst_stat_setting = int(float(window_h)/1.4)
+
+        #main window
+        self._background = xbmcgui.ControlImage(origin_x, origin_y, window_w, window_h, os.path.join(addonpath,"resources","art","lateral-fundo.png"))
+        self._acestreamlogo = xbmcgui.ControlImage(origin_x + int(float(window_w)/11.3), origin_y + int(float(window_h)/14), acelogo_w, acelogo_h, os.path.join(addonpath,"resources","art","acestreamlogo.png"))
+        self._supseparator = xbmcgui.ControlImage(origin_x, origin_y + int(float(viewport_h)/12.176), window_w-10, 1, os.path.join(addonpath,"resources","art","lateral-separador.png"))
+        self._botseparator = xbmcgui.ControlImage(origin_x, origin_y + window_h - 30, window_w-10, 1, os.path.join(addonpath,"resources","art","lateral-separador.png"))
+        self._title = xbmcgui.ControlLabel(origin_x+int(float(window_w)/3.4), origin_y + text_h, window_w - 140, text_h, str(translate(50000)), font=font_max, textColor='0xFFEB9E17')
+        self._total_stats_label = xbmcgui.ControlLabel(origin_x+int(float(window_h)/1.72), origin_y + int(float(window_h)/1.6), int(float(window_w)/1.7), 20, str(translate(50005)), font=font_min, textColor='0xFFEB9E17')
+        #labels
+        self._action = xbmcgui.ControlLabel(origin_x + text_lat, origin_y + fst_setting, int(float(text_w)*1.6), text_h, str(translate(50001)) + '  N/A', font=font_min)
+        self._download = xbmcgui.ControlLabel(origin_x + text_lat, origin_y + fst_setting + text_h, int(float(text_w)*1.6), text_h, str(translate(50002)) + '  N/A', font=font_min)
+        self._upload = xbmcgui.ControlLabel(origin_x + text_lat, origin_y + fst_setting + 2*text_h, text_w, text_h, str(translate(50003)) + '  N/A', font=font_min)
+        self._seeds = xbmcgui.ControlLabel(origin_x + text_lat, origin_y + fst_setting + 3*text_h, text_w, text_h, str(translate(50004)) + '  N/A', font=font_min)
+        self._total_download = xbmcgui.ControlLabel(origin_x + text_lat, origin_y + fst_stat_setting, text_w, text_h, str(translate(50006)) + '  N/A', font=font_min)
+        self._total_upload = xbmcgui.ControlLabel(origin_x + text_lat, origin_y + fst_stat_setting + text_h, text_w, text_h, str(translate(50007)) + '  N/A', font=font_min)
+        self._percent_value = xbmcgui.ControlLabel(origin_x+int(float(window_h)/1.05), origin_y + fst_setting, text_w, text_h,'N/A', font=font_min)
+
+    def show(self):
+        self.showing=True
+        self.window.addControl(self._background)
+        self.window.addControl(self._acestreamlogo)
+        self.window.addControl(self._supseparator)
+        self.window.addControl(self._botseparator)
+        self.window.addControl(self._title)
+        self.window.addControl(self._action)
+        self.window.addControl(self._download)
+        self.window.addControl(self._upload)
+        self.window.addControl(self._seeds)
+        self.window.addControl(self._total_stats_label)
+        self.window.addControl(self._total_download)
+        self.window.addControl(self._total_upload)
+        self.window.addControl(self._percent_value)
 
 
-        def show(self):
-                self.showing=True
-                self.window.addControl(self._background)
-                self.window.addControl(self._acestreamlogo)
-                self.window.addControl(self._supseparator)
-                self.window.addControl(self._botseparator)
-                self.window.addControl(self._title)
-                self.window.addControl(self._action)
-                self.window.addControl(self._download)
-                self.window.addControl(self._upload)
-                self.window.addControl(self._seeds)
-                self.window.addControl(self._total_stats_label)
-                self.window.addControl(self._total_download)
-                self.window.addControl(self._total_upload)
-                self.window.addControl(self._action_value)
-                self.window.addControl(self._download_value)
-                self.window.addControl(self._upload_value)
-                self.window.addControl(self._seeds_value)
-                self.window.addControl(self._total_download_value)
-                self.window.addControl(self._total_upload_value)
-                self.window.addControl(self._percent_value)
+    def hide(self):
+        self.showing=False
+        self.window.removeControl(self._total_download)
+        self.window.removeControl(self._total_upload)
+        self.window.removeControl(self._percent_value)
+        self.window.removeControl(self._title)
+        self.window.removeControl(self._action)
+        self.window.removeControl(self._download)
+        self.window.removeControl(self._upload)
+        self.window.removeControl(self._seeds)
+        self.window.removeControl(self._total_stats_label)
+        self.window.removeControl(self._acestreamlogo)
+        self.window.removeControl(self._supseparator)
+        self.window.removeControl(self._botseparator)
+        self.window.removeControl(self._background)
 
+    def set_information(self,engine_data):
+        if self.showing == True:
+            self._action.setLabel(str(translate(50001)) + '  ' + engine_data["action"])
+            self._percent_value.setLabel(engine_data["percent"])
+            self._download.setLabel(str(translate(50002))+ '  ' + engine_data["download"])
+            self._upload.setLabel(str(translate(50003)) + '  ' + engine_data["upload"])
+            self._seeds.setLabel(str(translate(50004)) + '  ' + engine_data["seeds"])
+            self._total_download.setLabel(str(translate(50006)) + '  ' + engine_data["total_download"])
+            self._total_upload.setLabel(str(translate(50007)) + '  ' + engine_data["total_upload"])
+        else: pass
 
-        def hide(self):
-                self.showing=False
-                self.window.removeControl(self._total_download)
-                self.window.removeControl(self._total_upload)
-                self.window.removeControl(self._action_value)
-                self.window.removeControl(self._download_value)
-                self.window.removeControl(self._upload_value)
-                self.window.removeControl(self._seeds_value)
-                self.window.removeControl(self._total_download_value)
-                self.window.removeControl(self._total_upload_value)
-                self.window.removeControl(self._percent_value)
-                self.window.removeControl(self._title)
-                self.window.removeControl(self._action)
-                self.window.removeControl(self._download)
-                self.window.removeControl(self._upload)
-                self.window.removeControl(self._seeds)
-                self.window.removeControl(self._total_stats_label)
-                self.window.removeControl(self._acestreamlogo)
-                self.window.removeControl(self._supseparator)
-                self.window.removeControl(self._botseparator)
-                self.window.removeControl(self._background)
-
-
-        def set_information(self,engine_data):
-                if self.showing == True:
-                        self._action_value.setLabel(engine_data["action"])
-                        self._percent_value.setLabel(engine_data["percent"])
-                        self._download_value.setLabel(engine_data["download"])
-                        self._upload_value.setLabel(engine_data["upload"])
-                        self._seeds_value.setLabel(engine_data["seeds"])
-                        self._total_download_value.setLabel(engine_data["total_download"])
-                        self._total_upload_value.setLabel(engine_data["total_upload"])
-                else: pass
-
-
-        def _close(self):
-                if self.showing:
-                        self.hide()
-                else:
-                        pass
-                try: 
-                        self.window.clearProperties()
-                        print("OverlayText window closed")
-                except: pass
+    def _close(self):
+        if self.showing:
+            self.hide()
+        else:
+            pass
+        try: 
+            self.window.clearProperties()
+            print("OverlayText window closed")
+        except: pass
+                
+    #Taken from xbmctorrent
+    def _get_skin_resolution(self):
+        import xml.etree.ElementTree as ET
+        skin_path = xbmc.translatePath("special://skin/")
+        tree = ET.parse(os.path.join(skin_path, "addon.xml"))
+        try: res = tree.findall("./res")[0]
+        except: res = tree.findall("./extension/res")[0]
+        return int(res.attrib["width"]), int(res.attrib["height"])
 
     

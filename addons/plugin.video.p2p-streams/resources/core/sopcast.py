@@ -11,6 +11,7 @@
 import xbmc,xbmcgui,xbmcplugin,urllib2,os,sys,subprocess,xbmcvfs,socket,re 
 from utils.pluginxbmc import *
 from utils.utilities import handle_wait
+from history import add_to_history
 
 """ Sopcast Dependent variables are listed below"""   
     
@@ -51,9 +52,12 @@ def sopstreams(name,iconimage,sop):
 	else: pass
 	print("Starting Player Sop URL: " + str(sop))
 	labelname=name
+	if settings.getSetting('addon_history') == "true":
+	    try: add_to_history(labelname, str(sop),2, iconimage)
+	    except: pass
 	if not xbmc.getCondVisibility('system.platform.windows'):
 	    if xbmc.getCondVisibility('System.Platform.Android') or settings.getSetting('force_android') == "true":
-	    	if  settings.getSetting('external_sopcast') == "0":
+	    	if  settings.getSetting('external-sopcast') == "0":
 			versionNumber = int(xbmc.getInfoLabel("System.BuildVersion" )[0:2])
 			if versionNumber >= 13:
 				xbmc.executebuiltin('XBMC.StartAndroidActivity("org.sopcast.android","android.intent.action.VIEW","",'+sop+')')
@@ -180,13 +184,18 @@ def sopstreams_builtin(name,iconimage,sop):
 			option = xbmcgui.Dialog().yesno(translate(40000), translate(70000),translate(70001))
 			if not option:
 				if xbmc.getCondVisibility('System.Platform.Android') or settings.getSetting('force_android') == "true":
+					xbmc_user = os.getlogin()
 					procshut = subprocess.Popen(['ps','|','grep','sopclient'],shell=False,stdout=subprocess.PIPE)
 					for line in procshut.stdout:
 						match = re.findall(r'\S+', line.rstrip())
 						if match:
-							if 'xbmc' in match[-1] and len(match)>2:
-								os.system("kill " + match[1])
-								xbmc.sleep(200)
+							if 'sopclient' in match[-1] and len(match)>2:
+								if xbmc_user == match[0]:
+									os.system("kill " + match[1])
+									xbmc.sleep(200)
+								else:
+									os.system("su -c kill " + match[1])
+									xbmc.sleep(200)
 				elif xbmc.getCondVisibility('System.Platform.Linux'):
 					os.system("kill $(ps aux | grep '[s]p-sc-auth' | awk '{print $1}')") #openelec
 					os.system("kill $(ps aux | grep '[s]p-sc-auth' | awk '{print $2}')")
@@ -273,6 +282,7 @@ def sopstreams_builtin(name,iconimage,sop):
 class SopWindowsPlayer(xbmc.Player):
       def __init__(self):
             self._playbackLock = True
+            if settings.getSetting('force_dvplayer') == 'true': xbmc.Player(xbmc.PLAYER_CORE_DVDPLAYER)
             print("Player created")
             
       def onPlayBackStarted(self):

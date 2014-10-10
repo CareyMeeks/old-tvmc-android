@@ -46,6 +46,13 @@
     <string id="400004">Sincronizar parsers agora</string>
     <string id="400005">Activar auto-sincronizacao de parsers</string>
     <string id="400006">Intervalo na pesquisa de alterações</string>
+    <string id="70009">Forçar utilização do DVD Player</string>
+    <string id="70010">Comando alternativo</string>
+    <string id="70036">-Histórico do addon</string>
+    <string id="70037">Activar histórico do addon</string>
+    <string id="70038">Items a guardar</string>
+    <string id="70039">Apagar histórico do addon</string>
+    <string id="70040">Entrar na lista de parsers automaticamente</string>
     
     <!-- Default.py -->
     <string id="40115">-Listas xml do addon</string>
@@ -165,6 +172,14 @@
     	<string id="50023">Não se esqueça que a AcestreamEngine app</string>
     	<string id="50024">deve estar em execução antes de lançar</string>
     	<string id="50025">qualquer acestream!</string>
+  	<string id="70014">A transferir módulo AcestreamEngine para Android</string>
+  	<string id="70015">Por defeito o addon irá utilizar o seu próprio módulo AcestreamEngine.</string>
+  	<string id="70016">Deseja transferir e usar a aplicação externa oficial?</string>
+  	<string id="70017">Deseja transferir o Ace Player?</string>
+  	<string id="70018">Desta forma poderá utilizar a opção de player externo.</string>
+  	<string id="70019">Transferindo Ace Player...</string>
+  	<string id="70020">Aceplayer.apk transferido para a pasta:</string>
+  	<string id="70021">Deseja utilizar o player externo como opção padrão?</string>
     	
     	<!-- advancedfunctions.py -->
     	<string id="40068">Remover ficheiro ts.lock </string>
@@ -192,6 +207,22 @@
  	<string id="600026">Definicao alterada com sucesso</string>
  	<string id="600025">Valor inválido. Apenas valores inteiros!</string>
  	<string id="40069">ts.lock removido com sucesso</string>
+     <string id="70011">Deseja alterar a pasta de cache?</string>
+     <string id="70012">Escolha a nova pasta</string>
+     <string id="70013">Pasta cache da AceStream engine</string>
+	<string id="70025">P2P-Streams função de forçar stop:</string>
+  	<string id="70026">Aplicar função stop costumizada</string>
+  	<string id="70027">Deseja substituir o botão de stop do tema pela nossa função costumizada?</string>
+	<string id="70028">Tema actual: </string>
+	<string id="70029">Esta funcionalidade apenas se aplica ao tema actual</string>
+	<string id="70030">Se este for actualizado necessitará de repetir este procedimento</string>
+	<string id="70031">Se remover o addon precisará de reverter estas alterações. Caso contrário, a função de stop do xbmc não irá funcionar.</string>
+	<string id="70032">Tem a certeza que deseja continuar?</string>
+	<string id="70033">Deseja mapear um botão no seu telecomando para a função de stop?</string>
+ 		
+	<!-- utils/keymapeditor.py -->
+	<string id="70034">Pressione o botão que deseja atribuir</string>
+	<string id="70035">Timeout em %.0f segundos...</string>
     
      <!-- livestreams.py -->
      <string id="40116">[B][COLOR orange]Lista sopcast.org[/COLOR][/B] (http://sopcast.org/chlist.xml)</string>
@@ -210,6 +241,9 @@
 	<string id="40145">Não tem favoritos!</string>
 	<string id="40148">Adicionado com sucesso aos favoritos</string>
 	<string id="40147">Removido com sucesso dos favoritos</string>
+	<string id="70022">Adicionar um favorito manualmente</string>
+	<string id="70023">Introduza um url sop ou ace</string>
+	<string id="70024">Insira um nome para o canal</string>
 	
 	<!-- directoryhandle.py -->
 	<string id="40143">Adicionar aos favoritos do addon</string>

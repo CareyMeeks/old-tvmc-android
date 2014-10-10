@@ -1,3 +1,22 @@
+1.2.8a
+Added another fox for non UK users streaming UK via FTV Guide
+Install new FTV Guide Repo
+
+1.2.7
+Fixed UK LIVE TV outside UK
+
+1.2.6
+Added fix for expired session id
+Fixed "Download Recording" function
+
+1.2.5
+Fixed TV Guide
+Added fix for FTV Guide
+
+1.2.4
+Fixed HD playback dropping out.
+Some non-geo channels should be working.
+
 1.2.3a
 Added back movies
 

@@ -48,7 +48,8 @@ def xml_lists_menu():
             for file in files:
                 f = open(os.path.join(pastaperfil,"Lists",file), "r")
                 string = f.read()
-                addDir("[B][COLOR orange]" + file.replace(".txt","") + "[/B][/COLOR]",string,101,addonpath + art + 'xml_lists.png',2,True)
+                if xbmcvfs.exists(os.path.join(pastaperfil,"Lists-fanart",file.replace('.txt','.jpg'))):addDir("[B][COLOR orange]" + file.replace(".txt","") + "[/B][/COLOR]",string,101,addonpath + art + 'xml_lists.png',2,True,fan_art=os.path.join(pastaperfil,"Lists-fanart",file.replace('.txt','.jpg')))
+                else: addDir("[B][COLOR orange]" + file.replace(".txt","") + "[/B][/COLOR]",string,101,addonpath + art + 'xml_lists.png',2,True)
     except: pass
     addDir(translate(40121),MainURL,107,addonpath + art + 'plus-menu.png',2,False)
     xbmc.executebuiltin("Container.SetViewMode(51)")
@@ -128,7 +129,7 @@ def list_type(url):
 def parse_m3u(url):
     if "http" in url: content = get_page_source(url)
     else: content = readfile(url)
-    match = re.compile('#EXTINF:.+?,(.*?)\n(.*)').findall(content)
+    match = re.compile('#EXTINF:.+?,(.*?)\n(.*?)(?:\r|\n)').findall(content)
     for channel_name,stream_url in match:
         if 'plugin://' in stream_url:
             stream_url = 'XBMC.RunPlugin('+stream_url+')'

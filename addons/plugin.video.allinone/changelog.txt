@@ -1,3 +1,32 @@
+[B]Version 5.0.5[/B]
+- small fix
+
+[B]Version 5.0.4[/B]
+- removed watch the tapes
+- added AwesomeDL
+- added radio back to main screen
+- added pure music 247 to radio
+- fixed uwatchfree.net
+
+[B]Version 5.0.2[/B]
+- code clean up 
+
+[B]Version 5.0.1[/B]
+- added 
+- undergroundflix to tv shows & movies 
+- Central Radio UK to Radio 
+- code clean up 
+- removed sites not working 
+
+
+[B]Version 5.0.0[/B]
+- fixed :
+- wrestling rulez 
+- searches : removed sites that have been taken down 
+
+[B]Version 4.1.6[/B]
+- fix
+
 [B]Version 4.1.5[/B]
 - fixed searches : removed sites that have been taken down
 

@@ -11,7 +11,7 @@
 				<posy>110</posy>
 				<width>845</width>
 				<height>500</height>
-				<texture border="15,0,0,0" flipx="false">background.jpg</texture>
+				<texture border="15,0,0,0" flipx="false">background2.jpg</texture>
 			</control>
 			<control type="button">
 				<description>Close Window button</description>
