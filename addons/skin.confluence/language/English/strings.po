@@ -550,7 +550,7 @@ msgid "First run help...."
 msgstr ""
 
 msgctxt "#31412"
-msgid "This tab signifies that there is a menu off to the side of this window that contains extra options for this section.  To access the menu, navigate to the left with your remote control or keyboard or place your mouse pointer over the tab. [CR][CR]Click \"Ok\" to close this dialogue. It will not appear again."
+msgid "You're almost done! You'll be enjoying the magic of TVMC in a matter of minutes. There's just one last step to go: press the Click Here to Finalize TVMC Installation at the next prompt after you [CR][CR]Click \"Ok\" to close this dialog."
 msgstr ""
 
 msgctxt "#31413"

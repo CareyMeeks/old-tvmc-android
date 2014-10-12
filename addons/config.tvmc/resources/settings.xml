@@ -1,0 +1,12 @@
+<settings>
+	<category label="General">
+		<setting visible="true" id="status" type="text" label="Status" default="" />
+		<setting visible="false" id="homescreen-shortcuts" type="bool" label="HomeScreen Shortcuts" default="true" />
+		<setting visible="false" id="other-skin-settings" type="bool" label="Other Settings" default="true" />
+		<setting visible="false" id="bypass-xbmcversion" type="bool" label="Bypass Check: Kodi (XBMC) Version" default="false" />
+		<setting visible="false" id="auto-view" type="bool" label="Enable Auto View" default="true" />
+		<setting visible="false" id="movies-view" type="number" label="Movie View" default="500" enable="!eq(-1,false)" />
+		<setting visible="false" id="default-view" type="number" label="Default View" default="50" enable="!eq(-5,false)" />
+		<setting visible="false" id="custom-url" type="text" label="Url to a Custom zip file" default="" />
+	</category>
+</settings>
