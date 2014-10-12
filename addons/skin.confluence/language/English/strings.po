@@ -546,7 +546,7 @@ msgid "[B]CONFIGURE SERVICE SETTINGS[/B][CR][CR]Setup control of XBMC via UPnP a
 msgstr ""
 
 msgctxt "#31411"
-msgid "First run help...."
+msgid "Almost done..."
 msgstr ""
 
 msgctxt "#31412"
