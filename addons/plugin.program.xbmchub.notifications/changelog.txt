@@ -1,5 +1,0 @@
-[B]1.0.1[/B]
-- Setup for new site domain.
-
-[B]1.0.0 - [U]Initial Version[/U][/B]
-...
